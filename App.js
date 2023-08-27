@@ -26,35 +26,3 @@ export default function App() {
 
 
 
-
-
-
-
-
-
-
-// <View style={styles.container}>
-//   <ImageBackground source={bgImg} style={styles.image}>
-//     <RegistrationScreen />
-//     {/* <LoginScreen /> */}
-//   </ImageBackground>
-
-//   <StatusBar style="auto" />
-// </View>
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     justifyContent: "flex-end",
-//     alignItems: "center",
-//   },
-
-//   image: {
-//     flex: 1,
-//     width: "100%",
-//     justifyContent: "flex-end",
-//     alignItems: "center",
-//     resizeMode: "cover",
-//   },
-// });
