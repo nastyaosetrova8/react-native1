@@ -59,7 +59,7 @@ export const LoginScreen = () => {
                 <AddSvg style={styles.addSvgStyle} />
               </View>
 
-              <Text style={styles.title}>Реєстрація</Text>
+              <Text style={styles.title}>Увійти</Text>
               <TextInput
                 name="email"
                 value={email}
