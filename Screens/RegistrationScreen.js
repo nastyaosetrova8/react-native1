@@ -1,33 +1,92 @@
 import {
-  Pressable,
+  View,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  Pressable,
+  KeyboardAvoidingView,
+  Platform,
+  TouchableWithoutFeedback,
+  Keyboard,
+
+  ImageBackground,
+  ScrollView,
+  Alert
 } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddSvg from "../assets/images/add.svg";
+
+import bgImg from "../assets/images/bgImg.png";
+import { StatusBar } from "expo-status-bar";
 
 export const RegistrationScreen = () => {
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [keyboardShow, setKeyboardShow] = useState(false);
+
+  const [passwordVisibility, setPasswordVisibility] = useState(true);
+const [show, setShow] = useState('Показати')
+  
+
+ 
+  const nandleSignUp = () => {
+    if (!login || !email || !password) {
+      return Alert.alert("Fill in all fields")
+    }
+    Alert.alert("Credentials", `${login} + ${email} + ${password}`);
+    console.warn('Welcome!');
+
+    resetForm();
+  };
+  function resetForm () {
+    setLogin("");
+    setEmail("");
+    setPassword("");
+  }
+
+  const handlePasswordVisibility = () => {
+    if (show === 'Показати') {
+      setShow('Сховати');
+      setPasswordVisibility(!passwordVisibility);
+    } else if (show === 'Сховати') {
+      setShow('Показати');
+      setPasswordVisibility(!passwordVisibility);
+    }
+  };
+
 
   return (
-    <View style={styles.regSection}>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
+<View style={styles.container}>
+    <ImageBackground source={bgImg} style={styles.image}>
+    <KeyboardAvoidingView 
+    behavior={Platform.OS == "ios" ? "padding" : "height"}
+    keyboardVerticalOffset={-150}
+    >
+    
+
+    <View 
+    style={styles.regSection}
+    // style={{...styles.regSection, marginBottom: showKeyboard ? 16 : 77}}
+    >
+      
       <View style={styles.avatarWrapper}>
         <AddSvg style={styles.addSvgStyle} />
       </View>
 
       <Text style={styles.title}>Реєстрація</Text>
-      <View style={styles.form}>
+      {/* <View style={styles.form}> */}
         <TextInput
           name="login"
           value={login}
           placeholder="Логін"
           onChangeText={setLogin}
           placeholderTextColor="#BDBDBD"
+          // autoComplete="login"
+          // autoFocus={true}
           style={{
             ...styles.input,
             marginBottom: 16,
@@ -41,6 +100,8 @@ export const RegistrationScreen = () => {
           placeholder="Адреса електронної пошти"
           onChangeText={setEmail}
           placeholderTextColor="#BDBDBD"
+          // autoComplete="email"
+          keyboardType="email-address"
           style={{
             ...styles.input,
             marginBottom: 16,
@@ -48,42 +109,80 @@ export const RegistrationScreen = () => {
             backgroundColor: email ? "#FFFFFF" : "#F6F6F6",
           }}
         />
-        <View>
+        <View 
+        style={{width: "100%"}}
+        >
           <TextInput
             name="password"
             value={password}
             placeholder="Пароль"
             onChangeText={setPassword}
             placeholderTextColor="#BDBDBD"
+            // autoComplete="password"
+            // keyboardType="password"
+            secureTextEntry={passwordVisibility}
             style={{
               ...styles.input,
+              // marginBottom: keyboardShow ? 32 : 43,
+              marginBottom: 43,
               borderColor: password ? "#FF6C00" : "#E8E8E8",
               backgroundColor: password ? "#FFFFFF" : "#F6F6F6",
             }}
           />
-          <Pressable style={styles.showPassword}>
-            <Text style={styles.showPasswordText}>Показати</Text>
+          <Pressable onPress={handlePasswordVisibility} style={styles.showPassword}>
+            <Text style={styles.showPasswordText}>{show}</Text>
           </Pressable>
         </View>
 
-        <TouchableOpacity style={styles.formBtn}>
+<View style={{width: "100%", 
+// display: keyboardShow ? 'none' : 'flex'
+}}>
+        <TouchableOpacity 
+        onPress={nandleSignUp} 
+        style={styles.formBtn}>
           <Text style={styles.formBtnTitle}>Зареєструватися</Text>
         </TouchableOpacity>
 
         <Pressable>
           <Text style={styles.linkToLogin}>Вже є акаунт? Увійти</Text>
         </Pressable>
-      </View>
+
+        </View>
+      {/* </View> */}
+      
     </View>
+    </KeyboardAvoidingView>
+
+    </ImageBackground>
+    {/* <StatusBar style="auto" /> */}
+    </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
+
+  container: {
+    flex: 1,
+    backgroundColor: "#fff",
+    // justifyContent: "flex-end",
+    // alignItems: "center",
+    paddingBottom: 30,
+  },
+  image: {
+    flex: 1,
+    // width: "100%",
+    justifyContent: "flex-end",
+    resizeMode: "cover",
+  },
+
+
   regSection: {
+
     position: "relative",
     width: "100%",
-    height: 549,
-    padding: 16,
+    // maxHeight: 549,
+    paddingHorizontal: 16,
     backgroundColor: "#ffffff",
     alignItems: "center",
     borderTopLeftRadius: 25,
@@ -124,8 +223,8 @@ const styles = StyleSheet.create({
     borderColor: "#E8E8E8",
   },
   formBtn: {
-    maxWidth: "100%",
-    marginTop: 43,
+    width: "100%",
+    // marginTop: 11,
     marginBottom: 16,
     paddingVertical: 16,
     alignItems: "center",
@@ -138,6 +237,7 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
   linkToLogin: {
+    marginBottom: 45,
     textAlign: "center",
     fontFamily: "Roboto400",
     fontSize: 16,

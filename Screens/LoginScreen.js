@@ -1,10 +1,10 @@
 import {
-  Pressable,
+  View,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
-  View,
+  Pressable,
 } from "react-native";
 import { useState } from "react";
 
@@ -60,7 +60,6 @@ export const LoginScreen = () => {
     </View>
   );
 };
-
 
 const styles = StyleSheet.create({
   regSection: {

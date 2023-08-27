@@ -1,9 +1,10 @@
 import { StatusBar } from "expo-status-bar";
-import { ImageBackground, StyleSheet, View } from "react-native";
+// import { ImageBackground, StyleSheet, View } from "react-native";
 import { RegistrationScreen } from "./Screens/RegistrationScreen";
-import bgImg from "./assets/images/bgImg.png";
+// import bgImg from "./assets/images/bgImg.png";
 import { useFonts } from "expo-font";
 import { LoginScreen } from "./Screens/LoginScreen";
+import { PostsScreen } from "./Screens/PostsScreen";
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -16,33 +17,40 @@ export default function App() {
     return null;
   }
 
-  
-  return (
-    <View style={styles.container}>
-      <ImageBackground source={bgImg} style={styles.image}>
-        <RegistrationScreen />
-        {/* <LoginScreen /> */}
-      </ImageBackground>
 
-      <StatusBar style="auto" />
-    </View>
+  return (
+<>
+<RegistrationScreen />
+{/* <PostsScreen /> */}
+<StatusBar style="auto" />
+</>
+
+
+    // <View style={styles.container}>
+    //   <ImageBackground source={bgImg} style={styles.image}>
+    //     <RegistrationScreen />
+    //     {/* <LoginScreen /> */}
+    //   </ImageBackground>
+
+    //   <StatusBar style="auto" />
+    // </View>
   );
 }
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    justifyContent: "flex-end",
-    alignItems: "center",
-  },
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: "#fff",
+//     justifyContent: "flex-end",
+//     alignItems: "center",
+//   },
 
-  image: {
-    flex: 1,
-    width: "100%",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    resizeMode: "cover",
-  },
-});
+//   image: {
+//     flex: 1,
+//     width: "100%",
+//     justifyContent: "flex-end",
+//     alignItems: "center",
+//     resizeMode: "cover",
+//   },
+// });
