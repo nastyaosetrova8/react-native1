@@ -16,6 +16,8 @@ import { useState } from "react";
 import AddSvg from "../assets/images/add.svg";
 import bgImg from "../assets/images/bgImg.png";
 import { togglePasswordVisibility } from "../helpers/passwordVisibility";
+import { useNavigation } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 
 export const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -24,14 +26,16 @@ export const LoginScreen = () => {
   const [passwordFocus, setPasswordFocus] = useState(false);
   const { passwordVisibility, show, handlePasswordVisibility } =
     togglePasswordVisibility();
+  const navigation = useNavigation();
 
   const handleSignIn = () => {
     if (!email || !password) {
       return Alert.alert("Fill in all fields");
     }
     Alert.alert("Credentials", `${email} + ${password}`);
-    console.warn("Welcome!");
+    // console.warn("Welcome!");
 
+    navigation.navigate("Home")
     resetForm();
   };
   function resetForm() {
@@ -47,6 +51,8 @@ export const LoginScreen = () => {
   };
 
   return (
+    <>
+    <StatusBar style="auto" /> 
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <ImageBackground source={bgImg} style={styles.image}>
@@ -61,7 +67,6 @@ export const LoginScreen = () => {
 
               <Text style={styles.title}>Увійти</Text>
               <TextInput
-                name="email"
                 value={email}
                 placeholder="Адреса електронної пошти"
                 onChangeText={setEmail}
@@ -78,7 +83,6 @@ export const LoginScreen = () => {
               />
               <View style={{ width: "100%" }}>
                 <TextInput
-                  name="password"
                   value={password}
                   placeholder="Пароль"
                   onChangeText={setPassword}
@@ -106,8 +110,8 @@ export const LoginScreen = () => {
                   <Text style={styles.formBtnTitle}>Зареєструватися</Text>
                 </TouchableOpacity>
 
-                <Pressable>
-                  <Text style={styles.linkToLogin}>Вже є акаунт? Увійти</Text>
+                <Pressable onPress={() => navigation.navigate('RegistrationScreen')}>
+                  <Text style={styles.linkToLogin}>Немає акаунту? Зареєструватися</Text>
                 </Pressable>
               </View>
             </View>
@@ -115,6 +119,7 @@ export const LoginScreen = () => {
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
+    </>
   );
 };
 

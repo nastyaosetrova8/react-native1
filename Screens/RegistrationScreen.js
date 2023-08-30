@@ -16,6 +16,8 @@ import { useState } from "react";
 import AddSvg from "../assets/images/add.svg";
 import bgImg from "../assets/images/bgImg.png";
 import { togglePasswordVisibility } from "../helpers/passwordVisibility";
+import { useNavigation } from "@react-navigation/native";
+import { StatusBar } from "expo-status-bar";
 
 export const RegistrationScreen = () => {
   const [login, setLogin] = useState("");
@@ -26,6 +28,7 @@ export const RegistrationScreen = () => {
   const [passwordFocus, setPasswordFocus] = useState(false);
   const { passwordVisibility, show, handlePasswordVisibility } =
     togglePasswordVisibility();
+    const navigation = useNavigation();
 
 
   const handleSignUp = () => {
@@ -33,8 +36,9 @@ export const RegistrationScreen = () => {
       return Alert.alert("Fill in all fields");
     }
     Alert.alert("Credentials", `${login} + ${email} + ${password}`);
-    console.warn("Welcome!");
+    // console.warn("Welcome!");
 
+    navigation.navigate("Home")
     resetForm();
   };
   function resetForm() {
@@ -54,6 +58,8 @@ export const RegistrationScreen = () => {
   };
 
   return (
+    <>
+    <StatusBar style="auto" /> 
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
         <ImageBackground source={bgImg} style={styles.image}>
@@ -68,7 +74,6 @@ export const RegistrationScreen = () => {
 
               <Text style={styles.title}>Реєстрація</Text>
               <TextInput
-                name="login"
                 value={login}
                 placeholder="Логін"
                 onChangeText={setLogin}
@@ -83,7 +88,6 @@ export const RegistrationScreen = () => {
                 }}
               />
               <TextInput
-                name="email"
                 value={email}
                 placeholder="Адреса електронної пошти"
                 onChangeText={setEmail}
@@ -100,7 +104,6 @@ export const RegistrationScreen = () => {
               />
               <View style={{ width: "100%" }}>
                 <TextInput
-                  name="password"
                   value={password}
                   placeholder="Пароль"
                   onChangeText={setPassword}
@@ -128,15 +131,19 @@ export const RegistrationScreen = () => {
                   <Text style={styles.formBtnTitle}>Зареєструватися</Text>
                 </TouchableOpacity>
 
-                <Pressable>
+                <Pressable onPress={() => navigation.navigate('LoginScreen')}>
                   <Text style={styles.linkToLogin}>Вже є акаунт? Увійти</Text>
                 </Pressable>
               </View>
             </View>
           </KeyboardAvoidingView>
+          
         </ImageBackground>
+        
       </View>
+  
     </TouchableWithoutFeedback>
+    </>
   );
 };
 
