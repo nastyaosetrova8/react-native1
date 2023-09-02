@@ -1,8 +1,11 @@
-import { Image, Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import { Image, Text, View, StyleSheet, TouchableOpacity, Pressable } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 export const PostItem = () => {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.postWrapper}>
       <Image
@@ -12,23 +15,25 @@ export const PostItem = () => {
       <Text style={styles.postTitle}>Захід на Чорному морі</Text>
       <View style={styles.postItemsWrapper}>
         <View style={styles.postDesc}>
-          <TouchableOpacity style={styles.actionBtn}>
+          <Pressable style={styles.actionBtn} onPress={() => navigation.navigate("CommentsScreen")}>
             <Ionicons name="chatbubble-sharp" size={24} color="#FF6C00" />
             <Text style={styles.count}>3</Text>
-          </TouchableOpacity>
+          </Pressable>
 
-          <TouchableOpacity style={{ ...styles.actionBtn, marginLeft: 24 }}>
+          <Pressable style={{ ...styles.actionBtn, marginLeft: 24 }}>
             <Feather name="thumbs-up" size={24} color="#FF6C00" />
             <Text style={styles.count}>200</Text>
-          </TouchableOpacity>
+          </Pressable>
         </View>
 
-        <TouchableOpacity style={styles.actionBtn}>
+        <Pressable style={styles.actionBtn} onPress={() =>
+              navigation.navigate("MapScreen")
+            }>
           <Feather name="map-pin" size={24} color="#BDBDBD" />
           <Text style={{ ...styles.count, textDecorationLine: "underline" }}>
             Ukraine
           </Text>
-        </TouchableOpacity>
+        </Pressable>
       </View>
     </View>
   );

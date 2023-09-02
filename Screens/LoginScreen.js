@@ -107,7 +107,7 @@ export const LoginScreen = () => {
 
               <View style={{ width: "100%" }}>
                 <TouchableOpacity onPress={handleSignIn} style={styles.formBtn}>
-                  <Text style={styles.formBtnTitle}>Зареєструватися</Text>
+                  <Text style={styles.formBtnTitle}>Увійти</Text>
                 </TouchableOpacity>
 
                 <Pressable onPress={() => navigation.navigate('RegistrationScreen')}>

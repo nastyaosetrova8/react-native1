@@ -5,7 +5,7 @@ import { CreatePostsScreen } from "../Screens/CreatePostsScreen";
 import { ProfileScreen } from "../Screens/ProfileScreen";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import { Pressable, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 const Tabs = createBottomTabNavigator();
 
@@ -27,6 +27,9 @@ export const Home = () => {
         tabBarStyle: {
           paddingTop: 9,
           paddingHorizontal: 90,
+          // boxShadow: "0px 0.5px 0px 0px rgba(0, 0, 0, 0.30)",
+          //   borderTopWidth: 0.3,
+          //   borderTopColor: "#B3B3B3",
         },
       }}
     >
@@ -35,7 +38,7 @@ export const Home = () => {
         component={PostsScreen}
         options={{
           tabBarIcon: ({ focused }) => (
-            <Feather name="grid" size="24" color="#212121CC" />
+            <Feather name="grid" size={24} color="#212121CC" />
           ),
           title: "Публікації",
           headerLeft: false,
@@ -50,8 +53,8 @@ export const Home = () => {
           },
           headerStyle: {
             boxShadow: "0px 0.5px 0px 0px rgba(0, 0, 0, 0.30)",
-            borderBottomWidth: 0.3,
-            borderBottomColor: "#B3B3B3",
+            borderBottomWidth: 1,
+            borderBottomColor: "#E8E8E8",
           },
         }}
       />
@@ -62,17 +65,8 @@ export const Home = () => {
         options={{
           tabBarIcon: ({ focused }) => {
             return (
-              <View
-                style={{
-                  width: 70,
-                  height: 40,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 20,
-                  backgroundColor: "#FF6C00",
-                }}
-              >
-                <Feather name="plus" size="24" color="#FFFFFF" />
+              <View style={styles.plusBnt}>
+                <Feather name="plus" size={24} color="#FFFFFF" />
               </View>
             );
           },
@@ -88,8 +82,8 @@ export const Home = () => {
           },
           headerStyle: {
             boxShadow: "0px 0.5px 0px 0px rgba(0, 0, 0, 0.30)",
-            borderBottomWidth: 0.3,
-            borderBottomColor: "#B3B3B3",
+            borderBottomWidth: 1,
+            borderBottomColor: "#E8E8E8",
           },
           tabBarStyle: { display: "none" },
         }}
@@ -107,3 +101,15 @@ export const Home = () => {
     </Tabs.Navigator>
   );
 };
+
+
+const styles = StyleSheet.create({
+plusBnt: {
+  width: 70,
+  height: 40,
+  alignItems: "center",
+  justifyContent: "center",
+  borderRadius: 20,
+  backgroundColor: "#FF6C00",
+}
+})

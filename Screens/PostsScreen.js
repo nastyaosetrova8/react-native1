@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet, Image } from "react-native";
+import { PostItem } from "../components/PostItem";
 
 
 export const PostsScreen = () => {
@@ -17,6 +18,7 @@ export const PostsScreen = () => {
           <Text style={styles.emailAdress}>email@example.com</Text>
         </View>
       </View>
+      <PostItem />
     </View>
   );
 };
