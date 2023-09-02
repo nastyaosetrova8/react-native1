@@ -52,9 +52,9 @@ export const CreatePostsScreen = () => {
   if (hasPermission === null) {
     return <View />;
   }
-  // if (hasPermission === false) {
-  //   return <Text>No access to camera</Text>;
-  // }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
   // ++++++++++++++++++++++++++++++++++
 
   const getLocation = async () => {
@@ -84,13 +84,15 @@ export const CreatePostsScreen = () => {
     }
     getLocation();
     navigation.navigate("PostsScreen");
-    restartImg();
+    reset();
+    // setTitle("");
+    // setLocation(null);
+  };
+  function reset() {
+    setImg(null);
     setTitle("");
     setLocation(null);
-  };
-  function restartImg() {
-    setImg(null);
-    setLocation(null);
+
   }
 
   return (
@@ -106,7 +108,7 @@ export const CreatePostsScreen = () => {
                   ...styles.iconWrapper,
                   backgroundColor: "rgba(255, 255, 255, 0.3)",
                 }}
-                onPress={restartImg}
+                onPress={reset}
               >
                 <FontAwesome name="camera" size={24} color="#FFFFFF" />
               </Pressable>
@@ -195,7 +197,7 @@ export const CreatePostsScreen = () => {
           </KeyboardAvoidingView>
         </ScrollView>
 
-        <Pressable style={styles.deleteBtn}>
+        <Pressable style={styles.deleteBtn} onPress={reset}>
           <Feather name="trash-2" size={24} color="#BDBDBD" />
         </Pressable>
         {/* </ScrollView> */}
