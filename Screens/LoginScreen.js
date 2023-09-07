@@ -13,11 +13,12 @@ import {
   Alert,
 } from "react-native";
 import { useState } from "react";
-import AddSvg from "../assets/images/add.svg";
 import bgImg from "../assets/images/bgImg.png";
 import { togglePasswordVisibility } from "../helpers/passwordVisibility";
 import { useNavigation } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
+import { useDispatch } from "react-redux";
+import { authSignInUser } from "../redux/operations";
 
 export const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -27,15 +28,15 @@ export const LoginScreen = () => {
   const { passwordVisibility, show, handlePasswordVisibility } =
     togglePasswordVisibility();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const handleSignIn = () => {
     if (!email || !password) {
       return Alert.alert("Fill in all fields");
     }
-    Alert.alert("Credentials", `${email} + ${password}`);
-    // console.warn("Welcome!");
+    // Alert.alert("Welcome", `${email}`);
 
-    navigation.navigate("Home")
+    dispatch(authSignInUser({ email, password }));
     resetForm();
   };
   function resetForm() {
@@ -52,73 +53,77 @@ export const LoginScreen = () => {
 
   return (
     <>
-    <StatusBar style="auto" /> 
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <ImageBackground source={bgImg} style={styles.image}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS == "ios" ? "padding" : "height"}
-            keyboardVerticalOffset={-150}
-          >
-            <View style={styles.regSection}>
-              <View style={styles.avatarWrapper}>
-                <AddSvg style={styles.addSvgStyle} />
-              </View>
-
-              <Text style={styles.title}>Увійти</Text>
-              <TextInput
-                value={email}
-                placeholder="Адреса електронної пошти"
-                onChangeText={setEmail}
-                placeholderTextColor="#BDBDBD"
-                keyboardType="email-address"
-                onFocus={handleEmailFocus}
-                onBlur={handleEmailFocus}
-                style={{
-                  ...styles.input,
-                  marginBottom: 16,
-                  borderColor: emailFocus ? "#FF6C00" : "#E8E8E8",
-                  backgroundColor: emailFocus ? "#FFFFFF" : "#F6F6F6",
-                }}
-              />
-              <View style={{ width: "100%" }}>
+      <StatusBar style="auto" />
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <ImageBackground source={bgImg} style={styles.image}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS == "ios" ? "padding" : "height"}
+              keyboardVerticalOffset={-150}
+            >
+              <View style={styles.regSection}>
+                <Text style={styles.title}>Увійти</Text>
                 <TextInput
-                  value={password}
-                  placeholder="Пароль"
-                  onChangeText={setPassword}
+                  value={email}
+                  placeholder="Адреса електронної пошти"
+                  onChangeText={(text) => setEmail(text)}
                   placeholderTextColor="#BDBDBD"
-                  secureTextEntry={passwordVisibility}
-                  onFocus={handlePasswordFocus}
-                  onBlur={handlePasswordFocus}
+                  keyboardType="email-address"
+                  onFocus={handleEmailFocus}
+                  onBlur={handleEmailFocus}
+                  autoCapitalize="none"
                   style={{
                     ...styles.input,
-                    marginBottom: 43,
-                    borderColor: passwordFocus ? "#FF6C00" : "#E8E8E8",
-                    backgroundColor: passwordFocus ? "#FFFFFF" : "#F6F6F6",
+                    marginBottom: 16,
+                    borderColor: emailFocus ? "#FF6C00" : "#E8E8E8",
+                    backgroundColor: emailFocus ? "#FFFFFF" : "#F6F6F6",
                   }}
                 />
-                <Pressable
-                  onPress={handlePasswordVisibility}
-                  style={styles.showPassword}
-                >
-                  <Text style={styles.showPasswordText}>{show}</Text>
-                </Pressable>
-              </View>
+                <View style={{ width: "100%" }}>
+                  <TextInput
+                    value={password}
+                    placeholder="Пароль"
+                    onChangeText={(text) => setPassword(text)}
+                    placeholderTextColor="#BDBDBD"
+                    secureTextEntry={passwordVisibility}
+                    onFocus={handlePasswordFocus}
+                    onBlur={handlePasswordFocus}
+                    style={{
+                      ...styles.input,
+                      marginBottom: 43,
+                      borderColor: passwordFocus ? "#FF6C00" : "#E8E8E8",
+                      backgroundColor: passwordFocus ? "#FFFFFF" : "#F6F6F6",
+                    }}
+                  />
+                  <Pressable
+                    onPress={handlePasswordVisibility}
+                    style={styles.showPassword}
+                  >
+                    <Text style={styles.showPasswordText}>{show}</Text>
+                  </Pressable>
+                </View>
 
-              <View style={{ width: "100%" }}>
-                <TouchableOpacity onPress={handleSignIn} style={styles.formBtn}>
-                  <Text style={styles.formBtnTitle}>Увійти</Text>
-                </TouchableOpacity>
+                <View style={{ width: "100%" }}>
+                  <TouchableOpacity
+                    onPress={handleSignIn}
+                    style={styles.formBtn}
+                  >
+                    <Text style={styles.formBtnTitle}>Увійти</Text>
+                  </TouchableOpacity>
 
-                <Pressable onPress={() => navigation.navigate('RegistrationScreen')}>
-                  <Text style={styles.linkToLogin}>Немає акаунту? Зареєструватися</Text>
-                </Pressable>
+                  <Pressable
+                    onPress={() => navigation.navigate("RegistrationScreen")}
+                  >
+                    <Text style={styles.linkToLogin}>
+                      Немає акаунту? Зареєструватися
+                    </Text>
+                  </Pressable>
+                </View>
               </View>
-            </View>
-          </KeyboardAvoidingView>
-        </ImageBackground>
-      </View>
-    </TouchableWithoutFeedback>
+            </KeyboardAvoidingView>
+          </ImageBackground>
+        </View>
+      </TouchableWithoutFeedback>
     </>
   );
 };
@@ -134,7 +139,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     resizeMode: "cover",
   },
-
   regSection: {
     position: "relative",
     width: "100%",
@@ -144,21 +148,8 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
   },
-  avatarWrapper: {
-    position: "absolute",
-    top: -60,
-    width: 120,
-    height: 120,
-    borderRadius: 16,
-    backgroundColor: "#F6F6F6",
-  },
-  addSvgStyle: {
-    position: "absolute",
-    bottom: 8,
-    right: -18,
-  },
   title: {
-    marginTop: 92,
+    marginTop: 32,
     marginBottom: 33,
     fontFamily: "Roboto500",
     fontSize: 30,
@@ -192,7 +183,8 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
   linkToLogin: {
-    marginBottom: 45,
+    // marginBottom: 45,
+    marginBottom: 132,
     textAlign: "center",
     fontFamily: "Roboto400",
     fontSize: 16,

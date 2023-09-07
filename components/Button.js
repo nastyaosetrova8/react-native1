@@ -8,7 +8,7 @@ export const ButtonGoBack = () => {
   return (
     <Pressable
       style={{ marginLeft: 16 }}
-      onPress={() => navigation.navigate("PostsScreen")}
+      onPress={() => navigation.goBack()}
     >
       <AntDesign name="arrowleft" size={24} color="#212121CC" />
     </Pressable>

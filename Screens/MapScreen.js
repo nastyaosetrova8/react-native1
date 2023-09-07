@@ -1,48 +1,36 @@
-import React, { useEffect, useState } from "react";
 import MapView, { Marker } from "react-native-maps";
-import { Alert, Dimensions, StyleSheet, View } from "react-native";
-import * as Location from "expo-location";
+import { Dimensions, StyleSheet, View } from "react-native";
 import { PROVIDER_GOOGLE } from "react-native-maps";
 
-export const MapScreen = () => {
-  const [location, setLocation] = useState(null);
+export const MapScreen = ({ route }) => {
+  const title = route.params.title;
+  const location = route.params.location;
+  const { latitude, longitude } = route.params.coords;
 
-  const userLocation = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== "granted") {
-      Alert.alert("Permission to access location was denied");
-    }
-
-    let location = await Location.getCurrentPositionAsync({});
-    // enableHighAccurancy: true,
-    const coords = {
-      latitude: location.coords.latitude,
-      longitude: location.coords.longitude,
-    };
-    setLocation(coords);
-  };
-
-  useEffect(() => {
-    userLocation();
-  }, []);
 
   return (
     <View style={styles.containerMap}>
       <MapView
         style={styles.map}
-        region={{
-          ...location,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
+        initialRegion={{
+          latitude: latitude,
+          longitude: longitude,
+          latitudeDelta: 0.001,
+          longitudeDelta: 0.006,
         }}
         mapType="standard"
-        // minZoomLevel={15}
-        // showsUserLocation={true}
+        minZoomLevel={15}
+        showsUserLocation={true}
         provider={PROVIDER_GOOGLE}
       >
-        {location && (
-          <Marker coordinate={location} title="I am here" description="Hello" />
-        )}
+        <Marker
+          coordinate={{
+            latitude: latitude,
+            longitude: longitude,
+          }}
+          title={title}
+          description={location}
+        />
       </MapView>
     </View>
   );

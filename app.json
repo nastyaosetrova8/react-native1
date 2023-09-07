@@ -16,6 +16,7 @@
     ],
     "ios": {
       "supportsTablet": true,
+      "package": "com.company.react-native1",
       "config": {
         "googleMaps": {
           "ApiKey": "AIzaSyCkUqcrqyNMtGuNqRfXVQYRKiRVgR9MX4E"

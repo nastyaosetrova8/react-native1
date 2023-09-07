@@ -12,14 +12,23 @@ import {
   ScrollView,
   Alert,
 } from "react-native";
-
 import { FontAwesome } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 import * as Location from "expo-location";
+import * as ImagePicker from "expo-image-picker";
+import { useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
+import {
+  uploadBytes,
+  getDownloadURL,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { addDoc, collection } from "firebase/firestore";
+import { db, storage } from "../firebase/config";
 
 export const CreatePostsScreen = () => {
   const [img, setImg] = useState(null);
@@ -29,7 +38,9 @@ export const CreatePostsScreen = () => {
   const [cameraRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [coords, setCoords] = useState(null);
+  const [country, setCountry] = useState(null);
   const navigation = useNavigation();
+  const { userId, nickname } = useSelector((state) => state.auth);
 
   useEffect(() => {
     (async () => {
@@ -52,9 +63,9 @@ export const CreatePostsScreen = () => {
   if (hasPermission === null) {
     return <View />;
   }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
-  }
+  // if (hasPermission === false) {
+  //   return <Text>No access to camera</Text>;
+  // }
   // ++++++++++++++++++++++++++++++++++
 
   const getLocation = async () => {
@@ -64,17 +75,73 @@ export const CreatePostsScreen = () => {
         longitude: coords.coords.longitude,
       });
       setLocation(`${address[0].city}, ${address[0].country}`);
+      setCountry(address[0].country);
     } catch (error) {
       console.log(error);
     }
   };
 
   const takePicture = async () => {
-    if (cameraRef) {
-      const { uri } = await cameraRef.takePictureAsync();
-      setImg(uri);
+    try {
+      // const { uri } = await cameraRef.takePictureAsync();
+      // setImg(uri);
+      const img = await cameraRef.takePictureAsync();
+      setImg(img.uri);
       await MediaLibrary.createAssetAsync(uri);
+      // setImg(uri);
       getLocation();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const pickImage = async () => {
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 1,
+      });
+
+      if (!result.canceled) {
+        setImg(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const uploadImg = async () => {
+    try {
+      const response = await fetch(img);
+      const file = await response.blob();
+      //  uploadBytesResumable(ref(storage, `photos/${file._data.blobId}`), file);
+      await uploadBytes(ref(storage, `photos/${file._data.blobId}`), file);
+      const photoUrl = await getDownloadURL(
+        ref(storage, `photos/${file._data.blobId}`)
+      );
+      return photoUrl;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const uploadPost = async () => {
+    try {
+      const img = await uploadImg();
+      await addDoc(collection(db, "posts"), {
+        userId,
+        nickname,
+        img,
+        title,
+        location,
+        coords: coords.coords,
+        date: Date.now().toString(),
+        country,
+      });
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -83,16 +150,17 @@ export const CreatePostsScreen = () => {
       return Alert.alert("Fill in all fields");
     }
     getLocation();
-    navigation.navigate("PostsScreen");
+
+    Alert.alert(`${img} + ${title} + ${location}`);
+
+    uploadPost();
+    navigation.navigate("InitialPostsScreen");
     reset();
-    // setTitle("");
-    // setLocation(null);
   };
   function reset() {
     setImg(null);
     setTitle("");
     setLocation(null);
-
   }
 
   return (
@@ -128,22 +196,13 @@ export const CreatePostsScreen = () => {
                 <Text style={{ fontSize: 18, color: "white" }}> Flip </Text>
               </Pressable>
 
-              <Pressable
-                style={styles.iconWrapper}
-                onPress={takePicture}
-                // onPress={ async () => {
-                //   if (cameraRef) {
-                //     const { uri } = await cameraRef.takePictureAsync();
-                //     await MediaLibrary.createAssetAsync(uri);
-                //   }
-                // }}
-              >
+              <Pressable style={styles.iconWrapper} onPress={takePicture}>
                 <FontAwesome name="camera" size={24} color="#BDBDBD" />
               </Pressable>
             </Camera>
           )}
 
-          <Pressable>
+          <Pressable onPress={pickImage}>
             {img ? (
               <Text style={styles.btnLoadText}>Редагувати фото</Text>
             ) : (
@@ -159,7 +218,7 @@ export const CreatePostsScreen = () => {
             <TextInput
               value={title}
               placeholder="Назва..."
-              onChangeText={setTitle}
+              onChangeText={(text) => setTitle(text)}
               placeholderTextColor="#BDBDBD"
               style={{ ...styles.inputCreate, marginBottom: 16 }}
             />
@@ -173,7 +232,7 @@ export const CreatePostsScreen = () => {
               <TextInput
                 value={location}
                 placeholder="Місцевість..."
-                onChangeText={setLocation}
+                onChangeText={(text) => setLocation(text)}
                 placeholderTextColor="#BDBDBD"
                 style={{ ...styles.inputCreate, paddingLeft: 28 }}
               />

@@ -1,37 +1,97 @@
-import { Image, Text, View, StyleSheet, TouchableOpacity, Pressable } from "react-native";
+import {
+  Image,
+  Text,
+  View,
+  StyleSheet,
+  Pressable,
+} from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
+import {
+  collection,
+  doc,
+  getCountFromServer,
+  updateDoc,
+} from "firebase/firestore";
+import { db } from "../firebase/config";
 
-export const PostItem = () => {
-  const navigation = useNavigation();
+export const PostItem = ({
+  img,
+  title,
+  location,
+  navigation,
+  coords,
+  postId,
+  likes,
+}) => {
+  const [isLike, setIsLike] = useState(false);
+  const [count, setCount] = useState(null);
+  // const navigation = useNavigation();
+
+  const onLike = async () => {
+    setIsLike(!isLike);
+
+    if (isLike) {
+      await updateDoc(doc(db, "posts", postId), {
+        like: likes - 1,
+      });
+      return;
+    }
+    await updateDoc(doc(db, "posts", postId), {
+      like: likes ? likes + 1 : 1,
+    });
+    return;
+  };
+
+  const getCommentsCount = async () => {
+    try {
+      const coll = collection(db, "posts", postId, "comments");
+      const snapshot = await getCountFromServer(coll);
+      setCount(snapshot.data().count);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getCommentsCount();
+  }, []);
 
   return (
     <View style={styles.postWrapper}>
-      <Image
-        source={require("../assets/images/sunset.jpg")}
-        style={styles.postImage}
-      />
-      <Text style={styles.postTitle}>Захід на Чорному морі</Text>
+      <Image source={{ uri: img }} style={styles.postImage} />
+      <Text style={styles.postTitle}>{title}</Text>
       <View style={styles.postItemsWrapper}>
         <View style={styles.postDesc}>
-          <Pressable style={styles.actionBtn} onPress={() => navigation.navigate("CommentsScreen")}>
+          <Pressable
+            style={styles.actionBtn}
+            onPress={() =>
+              navigation.navigate("CommentsScreen", { img, postId })
+            }
+          >
             <Ionicons name="chatbubble-sharp" size={24} color="#FF6C00" />
-            <Text style={styles.count}>3</Text>
+            <Text style={styles.count}>{count}</Text>
           </Pressable>
 
-          <Pressable style={{ ...styles.actionBtn, marginLeft: 24 }}>
+          <Pressable
+            style={{ ...styles.actionBtn, marginLeft: 24 }}
+            onPress={onLike}
+          >
             <Feather name="thumbs-up" size={24} color="#FF6C00" />
-            <Text style={styles.count}>200</Text>
+            <Text style={styles.count}>{likes ? likes : 0}</Text>
           </Pressable>
         </View>
 
-        <Pressable style={styles.actionBtn} onPress={() =>
-              navigation.navigate("MapScreen")
-            }>
+        <Pressable
+          style={styles.actionBtn}
+          onPress={() =>
+            navigation.navigate("MapScreen", { coords, title, location })
+          }
+        >
           <Feather name="map-pin" size={24} color="#BDBDBD" />
           <Text style={{ ...styles.count, textDecorationLine: "underline" }}>
-            Ukraine
+            {location}
           </Text>
         </Pressable>
       </View>
