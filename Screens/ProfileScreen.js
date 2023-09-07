@@ -19,7 +19,6 @@ export const ProfileScreen = () => {
         name="CommentsScreen"
         component={CommentsScreen}
         options={{
-          // headerShown: false,
           title: "Коментарі",
           headerLeft: () => <ButtonGoBack />,
           headerTitleStyle: {
@@ -38,7 +37,6 @@ export const ProfileScreen = () => {
         name="MapScreen"
         component={MapScreen}
         options={{
-          // headerShown: false
           title: "Карта",
           headerLeft: () => <ButtonGoBack />,
           headerTitleStyle: {
@@ -55,4 +53,3 @@ export const ProfileScreen = () => {
     </NestedScreen.Navigator>
   );
 };
-

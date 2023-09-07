@@ -3,10 +3,6 @@ import {
   StyleSheet,
   Text,
   Pressable,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
   ImageBackground,
   SafeAreaView,
   Image,
@@ -58,16 +54,14 @@ export const InitialProfileScreen = () => {
     }
   };
 
+ 
+
   return (
     <>
       <StatusBar style="auto" />
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.container}>
+        <View style={styles.section}>
           <ImageBackground source={bgImg} style={styles.image}>
-            <KeyboardAvoidingView
-              behavior={Platform.OS == "ios" ? "padding" : "height"}
-              keyboardVerticalOffset={-150}
-            >
+            
               <View style={styles.regSection}>
                 <View style={styles.avatarWrapper}>
                   <Image source={{ uri: img }} style={styles.avatarImg} />
@@ -111,25 +105,24 @@ export const InitialProfileScreen = () => {
                         coords={item.coords}
                         postId={item.id}
                         likes={item.like}
+                        style = {styles.postItem}
                       />
                     )}
                     keyExtractor={(item) => item.id}
                   />
                 </SafeAreaView>
               </View>
-            </KeyboardAvoidingView>
+           
           </ImageBackground>
         </View>
-      </TouchableWithoutFeedback>
     </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  section: {
     flex: 1,
     backgroundColor: "#fff",
-    paddingBottom: 30,
   },
   image: {
     flex: 1,
@@ -137,11 +130,11 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
   },
   regSection: {
-    position: "relative",
-    width: "100%",
+    marginTop: 220,
+    paddingTop: 50,
+    paddingBottom: 96,
     paddingHorizontal: 16,
-    backgroundColor: "#ffffff",
-    alignItems: "center",
+    backgroundColor: "#fff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
   },
@@ -152,6 +145,17 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 16,
     backgroundColor: "#F6F6F6",
+  },
+  avatarWrapper: {
+    position: "relative",
+    width: 120,
+    height: 120,
+    marginTop: -110,
+    marginLeft: "auto",
+    marginRight: "auto",
+    borderRadius: 16,
+    backgroundColor: "#f6f6f6",
+    resizeMode: "cover",
   },
   avatarImg: {
     width: "100%",
@@ -166,20 +170,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
   },
   title: {
-    marginTop: 92,
-    marginBottom: 33,
+    marginVertical: 33,
     fontFamily: "Roboto500",
     fontSize: 30,
+    textAlign: "center",
+    color: "#212121",
   },
   logoutProfile: {
     position: "absolute",
     top: 22,
     right: 16,
   },
-  postsSection: {
-    flexGrow: 1,
-    width: "100%",
-    marginTop: 32,
-    backgroundColor: "#FFFFFF",
-  },
 });
+
+

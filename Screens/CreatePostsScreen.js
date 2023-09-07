@@ -25,7 +25,6 @@ import {
   uploadBytes,
   getDownloadURL,
   ref,
-  uploadBytesResumable,
 } from "firebase/storage";
 import { addDoc, collection } from "firebase/firestore";
 import { db, storage } from "../firebase/config";
@@ -60,9 +59,9 @@ export const CreatePostsScreen = () => {
   }, []);
 
   // +++++++++++++++++++++++++++++++
-  if (hasPermission === null) {
-    return <View />;
-  }
+  // if (hasPermission === null) {
+  //   return <View />;
+  // }
   // if (hasPermission === false) {
   //   return <Text>No access to camera</Text>;
   // }
@@ -83,19 +82,16 @@ export const CreatePostsScreen = () => {
 
   const takePicture = async () => {
     try {
-      // const { uri } = await cameraRef.takePictureAsync();
-      // setImg(uri);
-      const img = await cameraRef.takePictureAsync();
-      setImg(img.uri);
+      const { uri } = await cameraRef.takePictureAsync();
+      setImg(uri);
       await MediaLibrary.createAssetAsync(uri);
-      // setImg(uri);
       getLocation();
     } catch (error) {
       console.log(error);
     }
   };
 
-  const pickImage = async () => {
+  async function pickImage() {
     try {
       let result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -103,20 +99,18 @@ export const CreatePostsScreen = () => {
         aspect: [4, 3],
         quality: 1,
       });
-
       if (!result.canceled) {
         setImg(result.assets[0].uri);
       }
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   const uploadImg = async () => {
     try {
       const response = await fetch(img);
       const file = await response.blob();
-      //  uploadBytesResumable(ref(storage, `photos/${file._data.blobId}`), file);
       await uploadBytes(ref(storage, `photos/${file._data.blobId}`), file);
       const photoUrl = await getDownloadURL(
         ref(storage, `photos/${file._data.blobId}`)
@@ -150,9 +144,6 @@ export const CreatePostsScreen = () => {
       return Alert.alert("Fill in all fields");
     }
     getLocation();
-
-    Alert.alert(`${img} + ${title} + ${location}`);
-
     uploadPost();
     navigation.navigate("InitialPostsScreen");
     reset();
@@ -291,6 +282,7 @@ const styles = StyleSheet.create({
   camera: {
     width: "100%",
     height: 240,
+    marginBottom: 8,
     borderRadius: 8,
     justifyContent: "center",
     alignItems: "center",
@@ -337,7 +329,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
-
   puplishBtn: {
     width: "100%",
     justifyContent: "center",
@@ -356,7 +347,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     alignSelf: "center",
-    // marginTop: 100,
     marginBottom: 32,
     paddingHorizontal: 23,
     paddingVertical: 8,

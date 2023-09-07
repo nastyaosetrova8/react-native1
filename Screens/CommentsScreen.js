@@ -9,13 +9,13 @@ import {
   Pressable,
   Platform,
   FlatList,
+  Alert,
 } from "react-native";
 import { useEffect, useState } from "react";
 import { AntDesign } from "@expo/vector-icons";
 import {
   addDoc,
   collection,
-  doc,
   onSnapshot,
   orderBy,
   query,
@@ -49,6 +49,9 @@ export const CommentsScreen = ({ route }) => {
   }, []);
 
   const handleSendComment = async () => {
+    if (!commentItem) {
+      return Alert.alert("You can't post an empty comment");
+    }
     const date = new Date();
     const month = date.toLocaleString("default", { month: "long" });
     const fullDate = `${date.getDate()} ${month} ${date.getFullYear()} | ${date.getHours()}:${date.getMinutes()}`;
@@ -68,11 +71,15 @@ export const CommentsScreen = ({ route }) => {
     Keyboard.dismiss();
   };
 
+
   return (
     <View style={styles.section}>
+       <TouchableWithoutFeedback onPress={isKeyboard}>
       <View style={styles.createImgWrapper}>
         <Image source={{ uri: img }} style={styles.imgStyle} />
       </View>
+      </TouchableWithoutFeedback>
+
       <FlatList
         data={allComments}
         keyExtractor={(item) => item.id}
@@ -86,14 +93,10 @@ export const CommentsScreen = ({ route }) => {
         )}
       />
       <TouchableWithoutFeedback onPress={isKeyboard}>
-        <View
-          style={{
-            position: "relative",
-          }}
-        >
           <KeyboardAvoidingView
             behavior={Platform.OS == "ios" ? "padding" : "height"}
-          >
+            keyboardVerticalOffset={80}>
+             <View >
             <TextInput
               value={commentItem}
               style={styles.inputCreateComment}
@@ -111,8 +114,8 @@ export const CommentsScreen = ({ route }) => {
                 <AntDesign name="arrowup" size={24} color="#FFFFFF" />
               </Pressable>
             </View>
+            </View>
           </KeyboardAvoidingView>
-        </View>
       </TouchableWithoutFeedback>
     </View>
   );
@@ -176,3 +179,4 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF6C00",
   },
 });
+

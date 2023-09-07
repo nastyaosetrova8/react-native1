@@ -6,14 +6,16 @@ import {
   SafeAreaView,
   FlatList,
 } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { PostItem } from "../components/PostItem";
 import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
-export const InitialPostsScreen = ({ navigation }) => {
+export const InitialPostsScreen = () => {
   const [posts, setPosts] = useState([]);
+  const navigation = useNavigation();
   const { nickname, email, avatar } = useSelector((state) => state.auth);
 
   useEffect(() => {
@@ -101,7 +103,7 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     width: "100%",
     marginTop: 32,
-    marginBottom: 32,
+    marginBottom: 82,
     backgroundColor: "#FFFFFF",
   },
 });

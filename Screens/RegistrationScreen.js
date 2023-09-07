@@ -43,7 +43,6 @@ export const RegistrationScreen = () => {
       const response = await fetch(avatar);
       const file = await response.blob();
       await uploadBytes(ref(storage, `avatars/${file._data.blobId}`), file);
-      //  uploadBytesResumable(ref(storage, `avatars/${file._data.blobId}`), file);
       const imgUrl = await getDownloadURL(
         ref(storage, `avatars/${file._data.blobId}`)
       );
@@ -57,10 +56,6 @@ export const RegistrationScreen = () => {
     if (!login || !email || !password) {
       return Alert.alert("Fill in all fields");
     }
-    // Alert.alert("Credentials", `${login} + ${email} + ${password}`);
-    // console.warn("Welcome!");
-
-    // const avatar = await uploadPhoto();
     const avatar = await saveAvatar();
     dispatch(authSignUpUser({ email, password, login, avatar }));
     resetForm();

@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import {
   collection,
@@ -20,14 +21,13 @@ export const PostItem = ({
   img,
   title,
   location,
-  navigation,
   coords,
   postId,
   likes,
 }) => {
   const [isLike, setIsLike] = useState(false);
   const [count, setCount] = useState(null);
-  // const navigation = useNavigation();
+  const navigation = useNavigation();
 
   const onLike = async () => {
     setIsLike(!isLike);
@@ -58,6 +58,7 @@ export const PostItem = ({
     getCommentsCount();
   }, []);
 
+  const locationDesc = location.slice(0, 20);
   return (
     <View style={styles.postWrapper}>
       <Image source={{ uri: img }} style={styles.postImage} />
@@ -91,7 +92,7 @@ export const PostItem = ({
         >
           <Feather name="map-pin" size={24} color="#BDBDBD" />
           <Text style={{ ...styles.count, textDecorationLine: "underline" }}>
-            {location}
+            {locationDesc}
           </Text>
         </Pressable>
       </View>
@@ -118,7 +119,6 @@ const styles = StyleSheet.create({
   postItemsWrapper: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 35,
   },
   postDesc: {
     flexDirection: "row",

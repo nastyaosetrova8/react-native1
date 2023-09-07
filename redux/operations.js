@@ -40,7 +40,7 @@ export const authSingOutUser = createAsyncThunk(
   'auth/singOutUser',
   async (_, thunkApi) => {
     try {
-      await signOut(auth);``
+      await signOut(auth);
     } catch (error) {
       return thunkApi.rejectWithValue(error.message);
     }

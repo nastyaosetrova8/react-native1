@@ -1,12 +1,9 @@
 import React from "react";
 import { useFonts } from "expo-font";
-import { createStackNavigator } from "@react-navigation/stack";
 import "react-native-gesture-handler";
 import { Home } from "./Screens/Home";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
-
-const MainStack = createStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({

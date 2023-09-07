@@ -34,8 +34,6 @@ export const LoginScreen = () => {
     if (!email || !password) {
       return Alert.alert("Fill in all fields");
     }
-    // Alert.alert("Welcome", `${email}`);
-
     dispatch(authSignInUser({ email, password }));
     resetForm();
   };
@@ -183,7 +181,6 @@ const styles = StyleSheet.create({
     color: "#ffffff",
   },
   linkToLogin: {
-    // marginBottom: 45,
     marginBottom: 132,
     textAlign: "center",
     fontFamily: "Roboto400",
