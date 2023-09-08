@@ -10,6 +10,7 @@ const initialState = {
   avatar: null,
 };
 
+
 export const authSlice = createSlice({
   name: "auth",
   initialState,

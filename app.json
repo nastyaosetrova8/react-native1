@@ -21,17 +21,23 @@
         "googleMaps": {
           "ApiKey": "AIzaSyCkUqcrqyNMtGuNqRfXVQYRKiRVgR9MX4E"
         }
-      } 
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff",
         "softwareKeyboardLayoutMode": "pan"
-      }
+      },
+      "package": "com.nastyaosetrova.reactnative1"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "b09b0241-69d2-42e0-83c9-c89dcf27d195"
+      }
     }
   }
 }
